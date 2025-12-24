@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects - Emmanuel Awa</title>
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const theme = localStorage.getItem('theme') ||
+                (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+
+            // Set background color based on theme
+            const bgColor = theme === 'light' ? '#ffffff' : '#0f172a';
+            document.documentElement.style.backgroundColor = bgColor;
+            document.body.style.backgroundColor = bgColor;
+        })();
+    </script>
+    <style>
+        /* Prevent FOUC */
+        #app:not(.loaded) main {
+            opacity: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <main>
+            <section id="projects" class="content-section">
+                <div class="grid-container" id="projects-grid">
+                    <div class="card project-card">
+                        <h3>Project Alpha</h3>
+                        <p>A cool AI project.</p>
+                    </div>
+                    <div class="card project-card">
+                        <h3>Data Viz Dashboard</h3>
+                        <p>Interactive dashboard for sales data.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

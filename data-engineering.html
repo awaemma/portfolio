@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Engineering - Emmanuel Awa</title>
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') ||
+                (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+            const bgColor = theme === 'light' ? '#ffffff' : '#0f172a';
+            document.documentElement.style.backgroundColor = bgColor;
+            document.body.style.backgroundColor = bgColor;
+        })();
+    </script>
+    <style>
+        #app:not(.loaded) main {
+            opacity: 0 !important;
+        }
+
+        .track-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.5rem 2rem 2rem;
+        }
+
+        .track-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .track-header h2 {
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .track-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .track-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: gap 0.3s ease;
+        }
+
+        .back-link:hover {
+            gap: 0.8rem;
+        }
+
+        /* Tab Navigation */
+        .level-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 0.75rem 2rem;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .tab-button:hover {
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
+        }
+
+        .tab-button .badge {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tab-button.active .badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .badge-beginner {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .badge-intermediate {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+        }
+
+        .badge-advanced {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .level-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .topic-section {
+            margin-bottom: 2rem;
+        }
+
+        .topic-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .topic-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .resources-list {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .resource-item:hover {
+            background: rgba(56, 189, 248, 0.05);
+            border-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .resource-icon {
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+
+        .resource-content {
+            flex: 1;
+        }
+
+        .resource-title {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .resource-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <main>
+            <section class="content-section">
+                <div class="track-container">
+                    <a href="/academy.html" class="back-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
+                        </svg>
+                        Back to Curated Learning
+                    </a>
+
+                    <div class="track-header">
+                        <h2>Data Engineering</h2>
+                        <p class="track-description">
+                            Master the fundamentals of building data pipelines, ETL processes, and scalable data
+                            infrastructure. Progress from beginner to advanced with curated resources.
+                        </p>
+                    </div>
+
+                    <!-- Level Tabs -->
+                    <div class="level-tabs">
+                        <button class="tab-button active" onclick="switchTab('beginner')">
+                            Beginner Level
+                            <span class="badge badge-beginner">4 Topics</span>
+                        </button>
+                        <button class="tab-button" onclick="switchTab('intermediate')">
+                            Intermediate Level
+                            <span class="badge badge-intermediate">5 Topics</span>
+                        </button>
+                        <button class="tab-button" onclick="switchTab('advanced')">
+                            Advanced Level
+                            <span class="badge badge-advanced">5 Topics</span>
+                        </button>
+                    </div>
+
+                    <!-- Beginner Content -->
+                    <div id="beginner-content" class="tab-content active">
+                        <div class="level-card">
+                            <!-- Introduction to Data Engineering -->
+                            <div class="topic-section">
+                                <div class="topic-title">Introduction to Data Engineering</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=qWru-b6m030" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">What is Data Engineering?</div>
+                                            <div class="resource-meta">Seattle Data Guy • 15 min</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Engineering Roadmap 2024</div>
+                                            <div class="resource-meta">Simplilearn • 45 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- SQL for Data Engineers -->
+                            <div class="topic-section">
+                                <div class="topic-title">SQL for Data Engineers</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">SQL Tutorial - Full Database Course</div>
+                                            <div class="resource-meta">freeCodeCamp • 4 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=7S_tz1z_5bA" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">MySQL Tutorial for Beginners</div>
+                                            <div class="resource-meta">Programming with Mosh • 3 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Python for Data Engineers -->
+                            <div class="topic-section">
+                                <div class="topic-title">Python for Data Engineers</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Python for Beginners - Full Course</div>
+                                            <div class="resource-meta">Programming with Mosh • 6 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=8DvywoWv6fI" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Python for Data Engineering</div>
+                                            <div class="resource-meta">freeCodeCamp • 2 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Database Fundamentals -->
+                            <div class="topic-section">
+                                <div class="topic-title">Database Fundamentals</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=ztHopE5Wnpc" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">PostgreSQL Tutorial for Beginners</div>
+                                            <div class="resource-meta">freeCodeCamp • 4 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=xh4UgJdNQ-4" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">NoSQL Database Tutorial</div>
+                                            <div class="resource-meta">Simplilearn • 1 hour</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intermediate Content -->
+                    <div id="intermediate-content" class="tab-content">
+                        <div class="level-card">
+                            <!-- Data Warehousing -->
+                            <div class="topic-section">
+                                <div class="topic-title">Data Warehousing</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Warehousing Concepts</div>
+                                            <div class="resource-meta">Simplilearn • 45 min</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=d4_sGtE501A" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Snowflake Tutorial for Beginners</div>
+                                            <div class="resource-meta">Simplilearn • 2 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- ETL/ELT Processes -->
+                            <div class="topic-section">
+                                <div class="topic-title">ETL/ELT Processes</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=jx8lmqN1K8Y" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">ETL vs ELT Explained</div>
+                                            <div class="resource-meta">Data Engineering Simplified • 12 min</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=AHMm1wfGuHE" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Apache Airflow Tutorial</div>
+                                            <div class="resource-meta">Tuan Vu • 2 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Big Data Tools -->
+                            <div class="topic-section">
+                                <div class="topic-title">Big Data Tools</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=_C8kWso4ne4" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Apache Spark Tutorial for Beginners</div>
+                                            <div class="resource-meta">freeCodeCamp • 3 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=QaoJNXW6SQo" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">PySpark Tutorial</div>
+                                            <div class="resource-meta">Simplilearn • 1.5 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Cloud Computing -->
+                            <div class="topic-section">
+                                <div class="topic-title">Cloud Computing</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=3hLmDS179YE" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">AWS Tutorial for Beginners</div>
+                                            <div class="resource-meta">freeCodeCamp • 4 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=gxZXoza2e78" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Google Cloud Platform Tutorial</div>
+                                            <div class="resource-meta">Simplilearn • 2 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Containerization -->
+                            <div class="topic-section">
+                                <div class="topic-title">Containerization</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=fqMOX6JJhGo" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Docker Tutorial for Beginners</div>
+                                            <div class="resource-meta">freeCodeCamp • 3 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=3c-iBn73dDE" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Docker Tutorial for Data Engineers</div>
+                                            <div class="resource-meta">TechWorld with Nana • 1 hour</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Content -->
+                    <div id="advanced-content" class="tab-content">
+                        <div class="level-card">
+                            <!-- Streaming Data -->
+                            <div class="topic-section">
+                                <div class="topic-title">Streaming Data</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=VtzvF17ysbc" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Apache Kafka Tutorial</div>
+                                            <div class="resource-meta">Confluent • 1.5 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=R873BlNVUB4" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Real-time Data Streaming with Kafka</div>
+                                            <div class="resource-meta">freeCodeCamp • 2 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Data Governance -->
+                            <div class="topic-section">
+                                <div class="topic-title">Data Governance</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=N-7Ii5JQGQM" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Governance Explained</div>
+                                            <div class="resource-meta">Simplilearn • 45 min</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=XO_6WqEkI8c" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Quality Management</div>
+                                            <div class="resource-meta">Data Engineering Academy • 30 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Infrastructure as Code -->
+                            <div class="topic-section">
+                                <div class="topic-title">Infrastructure as Code</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=7xngnjfIlK4" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Terraform Tutorial for Beginners</div>
+                                            <div class="resource-meta">freeCodeCamp • 2 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=SLB_c_ayRMo" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Terraform Complete Course</div>
+                                            <div class="resource-meta">DevOps Directive • 1.5 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- MLOps Integration -->
+                            <div class="topic-section">
+                                <div class="topic-title">MLOps Integration</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=Jz2EIWX5gZs" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">MLOps Explained</div>
+                                            <div class="resource-meta">Simplilearn • 1 hour</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=NGWujsW5X8A" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Building ML Pipelines</div>
+                                            <div class="resource-meta">Google Cloud Tech • 45 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Performance Optimization -->
+                            <div class="topic-section">
+                                <div class="topic-title">Performance Optimization</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=jItIQ-UvFI4" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Engineering on AWS - Best Practices</div>
+                                            <div class="resource-meta">AWS Events • 3 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Scaling Data Systems</div>
+                                            <div class="resource-meta">Google Cloud Tech • 50 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+        function switchTab(level) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(level + '-content').classList.add('active');
+
+            // Add active class to clicked button
+            event.target.closest('.tab-button').classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

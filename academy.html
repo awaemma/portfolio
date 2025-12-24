@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Academy - Emmanuel Awa</title>
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const theme = localStorage.getItem('theme') ||
+                (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+
+            // Set background color based on theme
+            const bgColor = theme === 'light' ? '#ffffff' : '#0f172a';
+            document.documentElement.style.backgroundColor = bgColor;
+            document.body.style.backgroundColor = bgColor;
+        })();
+    </script>
+    <style>
+        /* Prevent FOUC */
+        #app:not(.loaded) main {
+            opacity: 0 !important;
+        }
+
+        .academy-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem 2rem;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .topic-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .topic-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            display: block;
+            object-fit: contain;
+        }
+
+        .topic-title {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .topic-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .topic-meta {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .topic-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .coming-soon-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background: rgba(56, 189, 248, 0.1);
+            padding: 0.35rem 0.9rem;
+            border-radius: 9999px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <main>
+            <section id="academy" class="content-section">
+                <div class="academy-container">
+                    <div class="topics-grid">
+                        <!-- Data Engineering Card -->
+                        <a href="/data-engineering.html" class="topic-card">
+                            <img src="/images/data-engineering-icon.png" alt="Data Engineering" class="topic-icon">
+                            <h3 class="topic-title">Data Engineering</h3>
+                            <p class="topic-description">
+                                Master the art of building robust data pipelines, ETL processes, and scalable data
+                                infrastructure. Learn SQL, Python, cloud platforms, and modern data tools.
+                            </p>
+                            <div class="topic-meta">
+                                <span class="topic-meta-item">🎯 3 Learning Tracks</span>
+                                <span class="topic-meta-item">📹 30+ Resources</span>
+                            </div>
+                        </a>
+
+                        <!-- Data Analysis Card -->
+                        <a href="/data-analysis.html" class="topic-card">
+                            <img src="/images/data-analysis-icon.png" alt="Data Analysis" class="topic-icon">
+                            <h3 class="topic-title">Data Analysis</h3>
+                            <p class="topic-description">
+                                Transform raw data into actionable insights. Learn data visualization, statistical
+                                analysis, business intelligence tools, and storytelling with data.
+                            </p>
+                            <div class="topic-meta">
+                                <span class="topic-meta-item">🎯 3 Learning Tracks</span>
+                                <span class="topic-meta-item">📹 25+ Resources</span>
+                            </div>
+                        </a>
+
+                        <!-- Placeholder for future topics -->
+                        <div class="topic-card" style="opacity: 0.6; cursor: not-allowed; pointer-events: none;">
+                            <span class="topic-icon" style="font-size: 3.5rem;">🤖</span>
+                            <h3 class="topic-title">
+                                Machine Learning
+                                <span class="coming-soon-badge">Coming Soon</span>
+                            </h3>
+                            <p class="topic-description">
+                                Build intelligent systems that learn from data. Explore supervised learning, neural
+                                networks, and AI model deployment.
+                            </p>
+                            <div class="topic-meta">
+                                <span class="topic-meta-item">🎯 3 Learning Tracks</span>
+                                <span class="topic-meta-item">📹 Coming Soon</span>
+                            </div>
+                        </div>
+
+                        <div class="topic-card" style="opacity: 0.6; cursor: not-allowed; pointer-events: none;">
+                            <span class="topic-icon" style="font-size: 3.5rem;">☁️</span>
+                            <h3 class="topic-title">
+                                Cloud Computing
+                                <span class="coming-soon-badge">Coming Soon</span>
+                            </h3>
+                            <p class="topic-description">
+                                Master cloud platforms like AWS, Azure, and GCP. Learn cloud architecture, deployment,
+                                and scalability.
+                            </p>
+                            <div class="topic-meta">
+                                <span class="topic-meta-item">🎯 3 Learning Tracks</span>
+                                <span class="topic-meta-item">📹 Coming Soon</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Analysis - Emmanuel Awa</title>
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') ||
+                (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+            const bgColor = theme === 'light' ? '#ffffff' : '#0f172a';
+            document.documentElement.style.backgroundColor = bgColor;
+            document.body.style.backgroundColor = bgColor;
+        })();
+    </script>
+    <style>
+        #app:not(.loaded) main {
+            opacity: 0 !important;
+        }
+
+        .track-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.5rem 2rem 2rem;
+        }
+
+        .track-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .track-header h2 {
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .track-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .track-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: gap 0.3s ease;
+        }
+
+        .back-link:hover {
+            gap: 0.8rem;
+        }
+
+        /* Tab Navigation */
+        .level-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 0.75rem 2rem;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .tab-button:hover {
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
+        }
+
+        .tab-button .badge {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tab-button.active .badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .badge-beginner {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .badge-intermediate {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+        }
+
+        .badge-advanced {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .level-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .topic-section {
+            margin-bottom: 2rem;
+        }
+
+        .topic-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .topic-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .resources-list {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .resource-item:hover {
+            background: rgba(56, 189, 248, 0.05);
+            border-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .resource-icon {
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+
+        .resource-content {
+            flex: 1;
+        }
+
+        .resource-title {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .resource-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <main>
+            <section class="content-section">
+                <div class="track-container">
+                    <a href="/academy.html" class="back-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
+                        </svg>
+                        Back to Curated Learning
+                    </a>
+
+                    <div class="track-header">
+                        <h2>Data Analysis</h2>
+                        <p class="track-description">
+                            Transform raw data into actionable insights. Learn data visualization, statistical analysis,
+                            and business intelligence tools to tell compelling stories with data.
+                        </p>
+                    </div>
+
+                    <!-- Level Tabs -->
+                    <div class="level-tabs">
+                        <button class="tab-button active" onclick="switchTab('beginner')">
+                            Beginner Level
+                            <span class="badge badge-beginner">5 Topics</span>
+                        </button>
+                        <button class="tab-button" onclick="switchTab('intermediate')">
+                            Intermediate Level
+                            <span class="badge badge-intermediate">5 Topics</span>
+                        </button>
+                        <button class="tab-button" onclick="switchTab('advanced')">
+                            Advanced Level
+                            <span class="badge badge-advanced">5 Topics</span>
+                        </button>
+                    </div>
+
+                    <!-- Beginner Content -->
+                    <div id="beginner-content" class="tab-content active">
+                        <div class="level-card">
+                            <!-- Introduction to Data Analysis -->
+                            <div class="topic-section">
+                                <div class="topic-title">Introduction to Data Analysis</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=yZvFH7B6gKI" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">What is Data Analysis?</div>
+                                            <div class="resource-meta">Alex The Analyst • 20 min</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=1UXHsCT18wE" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Analyst Roadmap 2024</div>
+                                            <div class="resource-meta">Alex The Analyst • 15 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Excel for Data Analysis -->
+                            <div class="topic-section">
+                                <div class="topic-title">Excel for Data Analysis</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=GPVsHOlRBBI" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Excel Tutorial for Beginners</div>
+                                            <div class="resource-meta">freeCodeCamp • 3 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=Vl0H-qTclOg" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Excel for Data Analysis</div>
+                                            <div class="resource-meta">Alex The Analyst • 2 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- SQL Fundamentals -->
+                            <div class="topic-section">
+                                <div class="topic-title">SQL Fundamentals</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">SQL Tutorial - Full Course</div>
+                                            <div class="resource-meta">freeCodeCamp • 4 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=7S_tz1z_5bA" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">MySQL Tutorial for Beginners</div>
+                                            <div class="resource-meta">Programming with Mosh • 3 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Statistics Basics -->
+                            <div class="topic-section">
+                                <div class="topic-title">Statistics Basics</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=xxpc-HPKN28" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Statistics - A Full University Course</div>
+                                            <div class="resource-meta">freeCodeCamp • 8 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=qBigTkBLU6g" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Statistics Fundamentals</div>
+                                            <div class="resource-meta">StatQuest • Playlist</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Data Visualization Fundamentals -->
+                            <div class="topic-section">
+                                <div class="topic-title">Data Visualization Fundamentals</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=qBdTRdGoA2M" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Visualization Best Practices</div>
+                                            <div class="resource-meta">Storytelling with Data • 1 hour</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=0zZfU7hJwuY" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Introduction to Data Visualization</div>
+                                            <div class="resource-meta">Simplilearn • 45 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intermediate Content -->
+                    <div id="intermediate-content" class="tab-content">
+                        <div class="level-card">
+                            <!-- Power BI / Tableau -->
+                            <div class="topic-section">
+                                <div class="topic-title">Power BI / Tableau</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=c3OWSMRGBFE" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Power BI Full Course</div>
+                                            <div class="resource-meta">Pragmatic Works • 4 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=6xv1KvCMF1Q" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Tableau Tutorial for Beginners</div>
+                                            <div class="resource-meta">Edureka • 3 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Python for Data Analysis -->
+                            <div class="topic-section">
+                                <div class="topic-title">Python for Data Analysis (Pandas, NumPy)</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=TPMlZxRRaBQ" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Python Pandas Tutorial</div>
+                                            <div class="resource-meta">Keith Galli • 6 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=vmEHCJofslg" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">NumPy Tutorial for Beginners</div>
+                                            <div class="resource-meta">freeCodeCamp • 1 hour</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Advanced SQL -->
+                            <div class="topic-section">
+                                <div class="topic-title">Advanced SQL</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=Nt6JJR7Kjew" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Advanced SQL Tutorial</div>
+                                            <div class="resource-meta">Alex The Analyst • 2 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=2Fn0WAyZV0E" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">SQL Window Functions</div>
+                                            <div class="resource-meta">Alex The Analyst • 30 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Statistical Analysis -->
+                            <div class="topic-section">
+                                <div class="topic-title">Statistical Analysis</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=zRUliXuwJCQ" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Hypothesis Testing</div>
+                                            <div class="resource-meta">StatQuest • 45 min</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=0Vj2V2qRU10" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Regression Analysis</div>
+                                            <div class="resource-meta">StatQuest • 1 hour</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Business Intelligence Concepts -->
+                            <div class="topic-section">
+                                <div class="topic-title">Business Intelligence Concepts</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=yz13o_89K0Y" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Business Intelligence Tutorial</div>
+                                            <div class="resource-meta">Simplilearn • 1.5 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Warehousing for BI</div>
+                                            <div class="resource-meta">Simplilearn • 45 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Content -->
+                    <div id="advanced-content" class="tab-content">
+                        <div class="level-card">
+                            <!-- Predictive Analytics -->
+                            <div class="topic-section">
+                                <div class="topic-title">Predictive Analytics</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=7eh4d6sabA0" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Predictive Analytics Tutorial</div>
+                                            <div class="resource-meta">Simplilearn • 1.5 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Introduction to Predictive Modeling</div>
+                                            <div class="resource-meta">3Blue1Brown • 20 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- A/B Testing & Experimentation -->
+                            <div class="topic-section">
+                                <div class="topic-title">A/B Testing & Experimentation</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=1m2lZRn3igI" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">A/B Testing Explained</div>
+                                            <div class="resource-meta">Data Science Dojo • 45 min</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=VQlVrxjEzVk" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Experimental Design</div>
+                                            <div class="resource-meta">StatQuest • 30 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Advanced Data Visualization -->
+                            <div class="topic-section">
+                                <div class="topic-title">Advanced Data Visualization</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=_ZEWDGpM-vM" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Visualization with Python</div>
+                                            <div class="resource-meta">freeCodeCamp • 2 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=qBdTRdGoA2M" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Advanced Dashboard Design</div>
+                                            <div class="resource-meta">Storytelling with Data • 1 hour</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Machine Learning Basics -->
+                            <div class="topic-section">
+                                <div class="topic-title">Machine Learning Basics</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=ukzFI9rgwfU" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Machine Learning for Beginners</div>
+                                            <div class="resource-meta">freeCodeCamp • 3 hours</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=i_LwzRVP7bg" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Scikit-Learn Tutorial</div>
+                                            <div class="resource-meta">Keith Galli • 2 hours</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Data Storytelling & Communication -->
+                            <div class="topic-section">
+                                <div class="topic-title">Data Storytelling & Communication</div>
+                                <div class="resources-list">
+                                    <a href="https://www.youtube.com/watch?v=8EMW7io4rSI" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Data Storytelling Fundamentals</div>
+                                            <div class="resource-meta">Storytelling with Data • 45 min</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/watch?v=vTingdk_pVM" target="_blank"
+                                        class="resource-item">
+                                        <span class="resource-icon">📺</span>
+                                        <div class="resource-content">
+                                            <div class="resource-title">Presenting Data Insights</div>
+                                            <div class="resource-meta">Alex The Analyst • 30 min</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+        function switchTab(level) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(level + '-content').classList.add('active');
+
+            // Add active class to clicked button
+            event.target.closest('.tab-button').classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

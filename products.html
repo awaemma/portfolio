@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products - Emmanuel Awa</title>
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const theme = localStorage.getItem('theme') ||
+                (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+
+            // Set background color based on theme
+            const bgColor = theme === 'light' ? '#ffffff' : '#0f172a';
+            document.documentElement.style.backgroundColor = bgColor;
+            document.body.style.backgroundColor = bgColor;
+        })();
+    </script>
+    <style>
+        /* Prevent FOUC */
+        #app:not(.loaded) main {
+            opacity: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <main>
+            <section id="products" class="content-section">
+                <div class="grid-container">
+                    <div class="card product-card">
+                        <img src="/images/pipe_io.png" alt="Pipe.io Logo"
+                            style="width: 50px; height: 50px; margin-bottom: 1rem; border-radius: 8px;">
+                        <h3>Pipe.io <span
+                                style="font-size: 0.75rem; color: var(--accent-color); background: rgba(56, 189, 248, 0.1); padding: 0.25rem 0.75rem; border-radius: 9999px; margin-left: 0.5rem;">Coming
+                                Soon</span></h3>
+                        <p>Open-source local ETL tool. The Fivetran alternative for local teams.</p>
+                        <div class="tags">
+                            <span>ETL</span>
+                            <span>Open Source</span>
+                            <span>Local</span>
+                        </div>
+                    </div>
+                    <div class="card product-card">
+                        <img src="/images/easy_report.png" alt="Easy Report Logo"
+                            style="width: 50px; height: 50px; margin-bottom: 1rem; border-radius: 8px;">
+                        <h3>Easy Report <span
+                                style="font-size: 0.75rem; color: var(--accent-color); background: rgba(56, 189, 248, 0.1); padding: 0.25rem 0.75rem; border-radius: 9999px; margin-left: 0.5rem;">Coming
+                                Soon</span></h3>
+                        <p>Automated email reporting from your database.</p>
+                        <div class="tags">
+                            <span>Reporting</span>
+                            <span>Automation</span>
+                            <span>Email</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

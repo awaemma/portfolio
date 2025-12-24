@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blogs - Emmanuel Awa</title>
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const theme = localStorage.getItem('theme') ||
+                (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+
+            // Set background color based on theme
+            const bgColor = theme === 'light' ? '#ffffff' : '#0f172a';
+            document.documentElement.style.backgroundColor = bgColor;
+            document.body.style.backgroundColor = bgColor;
+        })();
+    </script>
+    <style>
+        /* Prevent FOUC */
+        #app:not(.loaded) main {
+            opacity: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <main>
+            <section id="blogs" class="content-section">
+                <div class="blog-list">
+                    <article class="card blog-card">
+                        <h3>The Future of ETL</h3>
+                        <p>Why local processing is making a comeback.</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </article>
+                    <article class="card blog-card">
+                        <h3>Automating Reports</h3>
+                        <p>How to save 10 hours a week with Easy Report.</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
