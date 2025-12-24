@@ -1,8 +1,36 @@
 {
     "rewrites": [
         {
-            "source": "/(.*)",
-            "destination": "/$1"
+            "source": "/data-engineering",
+            "destination": "/data-engineering.html"
+        },
+        {
+            "source": "/data-analysis",
+            "destination": "/data-analysis.html"
+        },
+        {
+            "source": "/academy",
+            "destination": "/academy.html"
+        },
+        {
+            "source": "/about",
+            "destination": "/about.html"
+        },
+        {
+            "source": "/projects",
+            "destination": "/projects.html"
+        },
+        {
+            "source": "/products",
+            "destination": "/products.html"
+        },
+        {
+            "source": "/blogs",
+            "destination": "/blogs.html"
+        },
+        {
+            "source": "/my-courses",
+            "destination": "/my-courses.html"
         }
     ],
     "cleanUrls": true,
