@@ -12,6 +12,9 @@ export default defineConfig({
         academy: 'academy.html',
         blogs: 'blogs.html',
         about: 'about.html',
+        dataEngineering: 'data-engineering.html',
+        dataAnalysis: 'data-analysis.html',
+        myCourses: 'my-courses.html',
       }
     }
   }
