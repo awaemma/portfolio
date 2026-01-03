@@ -11,6 +11,7 @@ export default defineConfig({
         projects: 'projects.html',
         academy: 'academy.html',
         blogs: 'blogs.html',
+        ebooks: 'ebooks.html',
         about: 'about.html',
         dataEngineering: 'data-engineering.html',
         dataAnalysis: 'data-analysis.html',

@@ -29,6 +29,10 @@
             "destination": "/blogs.html"
         },
         {
+            "source": "/ebooks",
+            "destination": "/ebooks.html"
+        },
+        {
             "source": "/my-courses",
             "destination": "/my-courses.html"
         }
