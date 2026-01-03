@@ -22,7 +22,13 @@ const navHTML = `
           <li><a href="/my-courses.html">My Courses</a></li>
         </ul>
       </li>
-      <li><a href="/blogs.html" class="${window.location.pathname.includes('blogs') ? 'active' : ''}">My Blog</a></li>
+      <li class="dropdown">
+        <a href="#" class="${window.location.pathname.includes('blogs') || window.location.pathname.includes('ebooks') ? 'active' : ''}">Resources ▾</a>
+        <ul class="dropdown-menu">
+          <li><a href="/blogs.html">My Blog</a></li>
+          <li><a href="/ebooks.html">Ebooks</a></li>
+        </ul>
+      </li>
       <li><a href="/about.html" class="${window.location.pathname.includes('about') ? 'active' : ''}">About Me</a></li>
       <li>
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
@@ -107,36 +113,10 @@ if (app) {
   app.classList.add('loaded');
 }
 
-// Scroll Animation (re-used)
-const observerOptions = {
-  root: null,
-  rootMargin: '0px',
-  threshold: 0.1
-};
 
-const observer = new IntersectionObserver((entries, observer) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('in-view');
-      observer.unobserve(entry.target);
-    }
-  });
-}, observerOptions);
-
-document.querySelectorAll('.card, h2, .about-content, .hero-content').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(20px)';
-  el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-  observer.observe(el);
-});
-
-// Add class for animation
+// Add class for active nav links
 const style = document.createElement('style');
 style.innerHTML = `
-  .in-view {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-  }
   .nav-links a.active {
     color: var(--accent-color);
     text-shadow: 0 0 10px var(--accent-glow);

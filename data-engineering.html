@@ -156,34 +156,152 @@
             }
         }
 
-        .level-card {
+        /* Card-based layout for topics */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .topics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .topic-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
-            padding: 2rem;
+            padding: 1.5rem;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            user-select: none;
         }
 
-        .topic-section {
-            margin-bottom: 2rem;
+        .topic-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15);
         }
 
-        .topic-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .topic-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
+        .topic-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .topic-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .topic-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .topic-icon.blue {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .topic-icon.orange {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        }
+
+        .topic-icon.cyan {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        }
+
+        .topic-icon.purple {
+            background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+        }
+
+        .topic-icon.green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .topic-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-card-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .topic-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .topic-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .topic-duration {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .topic-resources {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .topic-card.expanded .expandable-content {
+            max-height: 1000px;
         }
 
         .resources-list {
             display: grid;
             gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
         }
 
         .resource-item {
@@ -225,6 +343,27 @@
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
+
+        .expand-arrow {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+            color: var(--text-secondary);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .expand-arrow svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .topic-card.expanded .expand-arrow {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 
@@ -241,19 +380,12 @@
                         Back to Curated Learning
                     </a>
 
-                    <div class="track-header">
-                        <h2>Data Engineering</h2>
-                        <p class="track-description">
-                            Master the fundamentals of building data pipelines, ETL processes, and scalable data
-                            infrastructure. Progress from beginner to advanced with curated resources.
-                        </p>
-                    </div>
 
                     <!-- Level Tabs -->
                     <div class="level-tabs">
                         <button class="tab-button active" onclick="switchTab('beginner')">
                             Beginner Level
-                            <span class="badge badge-beginner">4 Topics</span>
+                            <span class="badge badge-beginner">5 Topics</span>
                         </button>
                         <button class="tab-button" onclick="switchTab('intermediate')">
                             Intermediate Level
@@ -261,102 +393,257 @@
                         </button>
                         <button class="tab-button" onclick="switchTab('advanced')">
                             Advanced Level
-                            <span class="badge badge-advanced">5 Topics</span>
+                            <span class="badge badge-advanced">3 Topics</span>
                         </button>
+                    </div>
+
+                    <!-- Course Flexibility Note -->
+                    <div
+                        style="margin: 1.5rem 0; padding: 1rem 1.25rem; background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%); border-left: 4px solid var(--accent-color); border-radius: 8px;">
+                        <p style="margin: 0; font-size: 0.95rem; color: var(--text-primary); line-height: 1.7;">
+                            <strong style="color: var(--accent-color);">📚 Course Flexibility:</strong> The resources
+                            listed are carefully curated recommendations. However, you're welcome to use any other
+                            courses or learning materials that cover the same topics. <strong>The goal is to ensure you
+                                understand the core concepts</strong> - the specific course you choose is less important
+                            than mastering the fundamentals. <em>Note: Content may be updated periodically with new
+                                learning resources.</em>
+                        </p>
                     </div>
 
                     <!-- Beginner Content -->
                     <div id="beginner-content" class="tab-content active">
-                        <div class="level-card">
-                            <!-- Introduction to Data Engineering -->
-                            <div class="topic-section">
-                                <div class="topic-title">Introduction to Data Engineering</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=qWru-b6m030" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">What is Data Engineering?</div>
-                                            <div class="resource-meta">Seattle Data Guy • 15 min</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Engineering Roadmap 2024</div>
-                                            <div class="resource-meta">Simplilearn • 45 min</div>
-                                        </div>
-                                    </a>
+                        <div class="topics-grid">
+                            <!-- Card 1: Introduction to Data Engineering -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon blue">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Data Engineering Fundamentals</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Learn the fundamentals of data pipelines, ETL processes, and data infrastructure
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 3-4 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PL60ofjIssveRTp9lAoGmN4WcgJ5l2Np1j"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Data Engineering Complete Course</div>
+                                                <div class="resource-meta">YouTube Playlist • Watch videos 1-24</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- SQL for Data Engineers -->
-                            <div class="topic-section">
-                                <div class="topic-title">SQL for Data Engineers</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">SQL Tutorial - Full Database Course</div>
-                                            <div class="resource-meta">freeCodeCamp • 4 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=7S_tz1z_5bA" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">MySQL Tutorial for Beginners</div>
-                                            <div class="resource-meta">Programming with Mosh • 3 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 2: SQL -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon orange">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 3L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-4zm0 2.18l7 2.8v7.02c0 4.35-2.99 8.41-7 9.49-4.01-1.08-7-5.14-7-9.49V7.98l7-2.8z" />
+                                            <path d="M9 12h2v5H9zm4 0h2v5h-2z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">SQL</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Master SQL for data querying, manipulation, and analysis across different database
+                                    systems
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 6-8 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PLNcg_FV9n7qZY_2eAtUzEUulNjTJREhQe"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">SQL Complete Course</div>
+                                                <div class="resource-meta">YouTube Playlist • MSSQL Environment</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.udacity.com/course/sql-for-data-analysis--ud198"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">🎓</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">SQL for Data Analysis (Udacity)</div>
+                                                <div class="resource-meta">Browser-based • Postgres Environment</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Python for Data Engineers -->
-                            <div class="topic-section">
-                                <div class="topic-title">Python for Data Engineers</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Python for Beginners - Full Course</div>
-                                            <div class="resource-meta">Programming with Mosh • 6 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=8DvywoWv6fI" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Python for Data Engineering</div>
-                                            <div class="resource-meta">freeCodeCamp • 2 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 3: Python -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon cyan">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 3 7.647 3l-.006 2.347h4.363v.645H5.647s-2.647-.293-2.647 4.644c0 4.937 2.311 4.764 2.311 4.764h1.377v-1.941s-.074-2.311 2.273-2.311zm-.177-6.839a.85.85 0 1 1-.002-1.699.85.85 0 0 1 .002 1.699z" />
+                                            <path
+                                                d="M14.415 12.308h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.574 0 4.289 0 4.289 0l.006-2.347h-4.363v-.645h6.357s2.647.293 2.647-4.644c0-4.937-2.311-4.764-2.311-4.764h-1.377v1.941s.074 2.311-2.273 2.311zm.176 6.839a.85.85 0 1 1 .002 1.699.85.85 0 0 1-.002-1.699z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Python</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Build strong programming foundations for data manipulation, automation, and pipeline
+                                    development
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 8-10 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PLNcg_FV9n7qZGfFl2ANI_zISzNp257Lwn"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Python Complete Course</div>
+                                                <div class="resource-meta">YouTube Playlist</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.udacity.com/course/introduction-to-python--ud1110"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">🎓</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Introduction to Python (Udacity)</div>
+                                                <div class="resource-meta">Browser-based • No installation required
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.learnpython.org" target="_blank" class="resource-item"
+                                            onclick="event.stopPropagation()">
+                                            <span class="resource-icon">💻</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">LearnPython.org (Alternative)</div>
+                                                <div class="resource-meta">Free interactive • Powered by DataCamp</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://futurecoder.io" target="_blank" class="resource-item"
+                                            onclick="event.stopPropagation()">
+                                            <span class="resource-icon">💻</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">futurecoder (Alternative)</div>
+                                                <div class="resource-meta">Free & open-source • Browser-based</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Database Fundamentals -->
-                            <div class="topic-section">
-                                <div class="topic-title">Database Fundamentals</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=ztHopE5Wnpc" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">PostgreSQL Tutorial for Beginners</div>
-                                            <div class="resource-meta">freeCodeCamp • 4 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=xh4UgJdNQ-4" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">NoSQL Database Tutorial</div>
-                                            <div class="resource-meta">Simplilearn • 1 hour</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 4: Git and GitHub -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon purple">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Git and GitHub</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Learn version control essentials for tracking code changes and team collaboration
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 2-3 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PLeo1K3hjS3usJuxZZUBdjAcilgfQHkRzW"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Git & GitHub Complete Course</div>
+                                                <div class="resource-meta">YouTube Playlist • Version Control
+                                                    Fundamentals</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 5: Linux -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon green">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.84-.41 1.684-.287 2.489a2.99 2.99 0 0 0-.287.958c0 .968.758 1.755 1.693 1.755.445 0 .85-.15 1.146-.413.883.991 2.02 1.632 3.314 1.632.945 0 1.82-.33 2.5-.878.68.548 1.555.878 2.5.878 1.294 0 2.43-.641 3.313-1.632.297.264.702.413 1.147.413.935 0 1.693-.787 1.693-1.755 0-.35-.096-.675-.287-.958.123-.805-.009-1.649-.287-2.489-.589-1.771-1.831-3.47-2.715-4.521-.75-1.067-.975-1.928-1.05-3.02-.066-1.491 1.055-5.965-3.17-6.298-.165-.013-.325-.021-.48-.021zm-.005 2.024c.075 0 .15.003.224.01 2.79.225 1.947 3.525 1.994 4.636.054 1.585.355 2.846 1.36 4.22.835 1.02 2.07 2.7 2.632 4.346.153.448.232.91.232 1.375 0 .093-.004.186-.013.278-.54-.228-1.133-.354-1.757-.354-1.208 0-2.3.474-3.108 1.238-.808-.764-1.9-1.238-3.108-1.238-.624 0-1.217.126-1.757.354a3.77 3.77 0 0 1-.013-.278c0-.465.08-.927.232-1.375.562-1.646 1.797-3.325 2.632-4.346 1.005-1.374 1.306-2.635 1.36-4.22.047-1.111-.796-4.411 1.994-4.636.074-.007.149-.01.224-.01z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Linux</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Master command line skills and shell scripting for server management and automation
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 3-4 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PLT98CRl2KxKHaKA9-4_I38sLzK134p4GJ"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Linux Basics Complete Course</div>
+                                                <div class="resource-meta">YouTube Playlist • Essential for Data
+                                                    Engineers</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -364,119 +651,266 @@
 
                     <!-- Intermediate Content -->
                     <div id="intermediate-content" class="tab-content">
-                        <div class="level-card">
-                            <!-- Data Warehousing -->
-                            <div class="topic-section">
-                                <div class="topic-title">Data Warehousing</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Warehousing Concepts</div>
-                                            <div class="resource-meta">Simplilearn • 45 min</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=d4_sGtE501A" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Snowflake Tutorial for Beginners</div>
-                                            <div class="resource-meta">Simplilearn • 2 hours</div>
-                                        </div>
-                                    </a>
+                        <div class="topics-grid">
+                            <!-- Card 1: Data Warehousing -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon blue">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 3h18v4H3zm0 6h18v4H3zm0 6h18v4H3z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Data Warehousing</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Design and implement centralized data storage solutions for analytics and
+                                    reporting
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge"
+                                        style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐
+                                        Intermediate</span>
+                                    <span class="topic-duration">⏱️ 4-6 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PLNcg_FV9n7qaUWeyUkPfiVtMbKlrfMqA8"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Data Warehouse Complete Playlist</div>
+                                                <div class="resource-meta">YouTube • Hands-on Projects</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://dimodelo.substack.com/p/what-is-a-data-warehouse-and-why-you-need-one"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📖</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">What is a Data Warehouse and Why You Need
+                                                    One</div>
+                                                <div class="resource-meta">Substack • Comprehensive guide to DW
+                                                    fundamentals</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.ibm.com/topics/data-warehouse" target="_blank"
+                                            class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📖</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">What is a Data Warehouse? (IBM)</div>
+                                                <div class="resource-meta">Free article • Architecture & Use Cases</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <p
+                                        style="margin-top: 1rem; padding: 1rem; background: rgba(56, 189, 248, 0.05); border-left: 3px solid var(--accent-color); border-radius: 4px; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                                        💡 <strong style="color: var(--text-primary);">Tip:</strong> For the YouTube
+                                        playlist, if you prefer shorter videos, start from the 2nd video "Intro to SQL
+                                        Project" - a practical data warehouse project. The conceptual resources (Guru99
+                                        & IBM) are excellent for understanding core data warehouse principles before
+                                        diving into hands-on work.
+                                    </p>
                                 </div>
                             </div>
 
-                            <!-- ETL/ELT Processes -->
-                            <div class="topic-section">
-                                <div class="topic-title">ETL/ELT Processes</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=jx8lmqN1K8Y" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">ETL vs ELT Explained</div>
-                                            <div class="resource-meta">Data Engineering Simplified • 12 min</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=AHMm1wfGuHE" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Apache Airflow Tutorial</div>
-                                            <div class="resource-meta">Tuan Vu • 2 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 2: DBT (Data Build Tool) -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon orange">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-4zM10 17l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">DBT (Data Build Tool)</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Transform data in your warehouse using SQL-based workflows and modern analytics
+                                    engineering
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge"
+                                        style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐
+                                        Intermediate</span>
+                                    <span class="topic-duration">⏱️ 4-6 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PLc2EZr8W2QIBegSYp4dEIMrfLj_cCJgYA"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">DBT Complete Course</div>
+                                                <div class="resource-meta">YouTube Playlist • Comprehensive DBT Training
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="https://learn.getdbt.com/catalog" target="_blank" class="resource-item"
+                                            onclick="event.stopPropagation()">
+                                            <span class="resource-icon">🎓</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">DBT Learn Catalog</div>
+                                                <div class="resource-meta">Official DBT Courses • Free & Interactive
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <p
+                                        style="margin-top: 1rem; padding: 1rem; background: rgba(251, 146, 60, 0.05); border-left: 3px solid #fb923c; border-radius: 4px; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                                        💡 <strong style="color: var(--text-primary);">Tip:</strong> Start with "DBT
+                                        Fundamentals" in the DBT Learn Catalog to build a strong foundation in analytics
+                                        engineering and modern data transformation workflows.
+                                    </p>
                                 </div>
                             </div>
 
-                            <!-- Big Data Tools -->
-                            <div class="topic-section">
-                                <div class="topic-title">Big Data Tools</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=_C8kWso4ne4" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Apache Spark Tutorial for Beginners</div>
-                                            <div class="resource-meta">freeCodeCamp • 3 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=QaoJNXW6SQo" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">PySpark Tutorial</div>
-                                            <div class="resource-meta">Simplilearn • 1.5 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 3: Apache Airflow -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon cyan">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Apache Airflow</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Build and orchestrate complex data workflows with Apache Airflow for pipeline
+                                    automation
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge"
+                                        style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐
+                                        Intermediate</span>
+                                    <span class="topic-duration">⏱️ 5-7 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://academy.astronomer.io/?_gl=1*1ipy9f0*_gcl_au*MjAxNDQzNjI0My4xNzY3NDQ0MTE3*_ga*OTQyNTcxOTY4LjE3Njc0NDQxMTg.*_ga_14DHW7X721*czE3Njc0NDQxMTgkbzEkZzAkdDE3Njc0NDQxMjIkajU2JGwwJGgw"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">🎓</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Astronomer Academy</div>
+                                                <div class="resource-meta">Official Airflow Training • Free Courses &
+                                                    Certifications</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Cloud Computing -->
-                            <div class="topic-section">
-                                <div class="topic-title">Cloud Computing</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=3hLmDS179YE" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">AWS Tutorial for Beginners</div>
-                                            <div class="resource-meta">freeCodeCamp • 4 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=gxZXoza2e78" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Google Cloud Platform Tutorial</div>
-                                            <div class="resource-meta">Simplilearn • 2 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 4: Docker Containerization -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon purple">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Docker Containerization</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Package and deploy data applications using Docker containers for consistent
+                                    environments
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge"
+                                        style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐
+                                        Intermediate</span>
+                                    <span class="topic-duration">⏱️ 3-4 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=p28piYY_wv8" target="_blank"
+                                            class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Docker Tutorial for Beginners</div>
+                                                <div class="resource-meta">YouTube • Complete Docker Guide</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Containerization -->
-                            <div class="topic-section">
-                                <div class="topic-title">Containerization</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=fqMOX6JJhGo" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Docker Tutorial for Beginners</div>
-                                            <div class="resource-meta">freeCodeCamp • 3 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=3c-iBn73dDE" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Docker Tutorial for Data Engineers</div>
-                                            <div class="resource-meta">TechWorld with Nana • 1 hour</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 5: Airbyte -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon green">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 2.18l7 3.5v7.32c0 4.35-2.99 8.41-7 9.49-4.01-1.08-7-5.14-7-9.49V7.68l7-3.5z" />
+                                            <path d="M7 12l2 2 4-4 4 4" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Airbyte (Data Integration)</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Build ELT pipelines with open-source data integration platform for syncing data
+                                    sources
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge"
+                                        style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐
+                                        Intermediate</span>
+                                    <span class="topic-duration">⏱️ 3-4 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://airbyteacademy.thinkific.com/" target="_blank"
+                                            class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">🎓</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Airbyte Academy</div>
+                                                <div class="resource-meta">Official Training • Free Courses &
+                                                    Certifications</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <p
+                                        style="margin-top: 1rem; padding: 1rem; background: rgba(34, 197, 94, 0.05); border-left: 3px solid #22c55e; border-radius: 4px; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                                        💡 <strong style="color: var(--text-primary);">Similar Open-Source
+                                            Tools:</strong> Other popular data integration tools include
+                                        <strong>Meltano</strong> (Singer-based ELT), <strong>Apache NiFi</strong> (data
+                                        flow automation), and <strong>Fivetran</strong> (managed ELT). Airbyte is
+                                        recommended for its extensive connector library and active community.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -484,126 +918,151 @@
 
                     <!-- Advanced Content -->
                     <div id="advanced-content" class="tab-content">
-                        <div class="level-card">
-                            <!-- Streaming Data -->
-                            <div class="topic-section">
-                                <div class="topic-title">Streaming Data</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=VtzvF17ysbc" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Apache Kafka Tutorial</div>
-                                            <div class="resource-meta">Confluent • 1.5 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=R873BlNVUB4" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Real-time Data Streaming with Kafka</div>
-                                            <div class="resource-meta">freeCodeCamp • 2 hours</div>
-                                        </div>
-                                    </a>
+                        <div class="topics-grid">
+                            <!-- Card 1: Streaming Data -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon blue">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                            <path d="M12 6v6l4 2" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Streaming Data</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Build real-time data pipelines with Apache Kafka and stream processing
+                                    frameworks
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge"
+                                        style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">⭐
+                                        Advanced</span>
+                                    <span class="topic-duration">⏱️ 6-8 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PL2IsFZBGM_IEtp2fF5xxZCS9CYBSHV2WW"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">PySpark Complete Playlist</div>
+                                                <div class="resource-meta">YouTube • Comprehensive PySpark Training
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/playlist?list=PLa7VYi0yPIH2PelhRHoFR5iQgflg-y6JA"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Kafka Fundamentals</div>
+                                                <div class="resource-meta">YouTube Playlist • Apache Kafka Essentials
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Data Governance -->
-                            <div class="topic-section">
-                                <div class="topic-title">Data Governance</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=N-7Ii5JQGQM" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Governance Explained</div>
-                                            <div class="resource-meta">Simplilearn • 45 min</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=XO_6WqEkI8c" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Quality Management</div>
-                                            <div class="resource-meta">Data Engineering Academy • 30 min</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 2: Infrastructure as Code -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon cyan">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M14.6 16.6l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4zm-5.2 0L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Infrastructure as Code</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Automate infrastructure provisioning with Terraform and configuration management
+                                    tools
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge"
+                                        style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">⭐
+                                        Advanced</span>
+                                    <span class="topic-duration">⏱️ 5-7 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=7xngnjfIlK4" target="_blank"
+                                            class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Terraform Tutorial for Beginners</div>
+                                                <div class="resource-meta">freeCodeCamp • 2 hours</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Infrastructure as Code -->
-                            <div class="topic-section">
-                                <div class="topic-title">Infrastructure as Code</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=7xngnjfIlK4" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Terraform Tutorial for Beginners</div>
-                                            <div class="resource-meta">freeCodeCamp • 2 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=SLB_c_ayRMo" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Terraform Complete Course</div>
-                                            <div class="resource-meta">DevOps Directive • 1.5 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 3: Data Governance -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon orange">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Data Governance</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
                                 </div>
-                            </div>
-
-                            <!-- MLOps Integration -->
-                            <div class="topic-section">
-                                <div class="topic-title">MLOps Integration</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=Jz2EIWX5gZs" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">MLOps Explained</div>
-                                            <div class="resource-meta">Simplilearn • 1 hour</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=NGWujsW5X8A" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Building ML Pipelines</div>
-                                            <div class="resource-meta">Google Cloud Tech • 45 min</div>
-                                        </div>
-                                    </a>
+                                <div class="topic-card-description">
+                                    Implement data quality, security, and compliance frameworks for enterprise
+                                    systems
                                 </div>
-                            </div>
-
-                            <!-- Performance Optimization -->
-                            <div class="topic-section">
-                                <div class="topic-title">Performance Optimization</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=jItIQ-UvFI4" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Engineering on AWS - Best Practices</div>
-                                            <div class="resource-meta">AWS Events • 3 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Scaling Data Systems</div>
-                                            <div class="resource-meta">Google Cloud Tech • 50 min</div>
-                                        </div>
-                                    </a>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge"
+                                        style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">⭐
+                                        Advanced</span>
+                                    <span class="topic-duration">⏱️ 4-6 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/playlist?list=PLIBwmCV8YuLPiN60TFvZ8iv6_nSW7QDXV"
+                                            target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Data Governance Complete Playlist</div>
+                                                <div class="resource-meta">YouTube • Comprehensive Data Governance
+                                                    Training</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
-            </section>
-        </main>
+    </div>
+    </section>
+    </main>
     </div>
     <script type="module" src="/src/main.js"></script>
     <script>
@@ -623,6 +1082,24 @@
 
             // Add active class to clicked button
             event.target.closest('.tab-button').classList.add('active');
+        }
+
+        function toggleCard(card) {
+            const isExpanded = card.classList.contains('expanded');
+
+            // Close all other cards
+            document.querySelectorAll('.topic-card.expanded').forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('expanded');
+                }
+            });
+
+            // Toggle the clicked card
+            if (!isExpanded) {
+                card.classList.add('expanded');
+            } else {
+                card.classList.remove('expanded');
+            }
         }
     </script>
 </body>

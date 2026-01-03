@@ -156,34 +156,152 @@
             }
         }
 
-        .level-card {
+        /* Card-based layout for topics */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .topics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .topic-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
-            padding: 2rem;
+            padding: 1.5rem;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            user-select: none;
         }
 
-        .topic-section {
-            margin-bottom: 2rem;
+        .topic-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15);
         }
 
-        .topic-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .topic-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
+        .topic-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .topic-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .topic-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .topic-icon.blue {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .topic-icon.orange {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        }
+
+        .topic-icon.cyan {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        }
+
+        .topic-icon.purple {
+            background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+        }
+
+        .topic-icon.green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .topic-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-card-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .topic-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .topic-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .topic-duration {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .topic-resources {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .topic-card.expanded .expandable-content {
+            max-height: 1000px;
         }
 
         .resources-list {
             display: grid;
             gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
         }
 
         .resource-item {
@@ -241,13 +359,6 @@
                         Back to Curated Learning
                     </a>
 
-                    <div class="track-header">
-                        <h2>Data Analysis</h2>
-                        <p class="track-description">
-                            Transform raw data into actionable insights. Learn data visualization, statistical analysis,
-                            and business intelligence tools to tell compelling stories with data.
-                        </p>
-                    </div>
 
                     <!-- Level Tabs -->
                     <div class="level-tabs">
@@ -264,362 +375,686 @@
                             <span class="badge badge-advanced">5 Topics</span>
                         </button>
                     </div>
+                    <!-- Course Flexibility Note -->
+                    <div style="margin: 1.5rem 0; padding: 1rem 1.25rem; background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%); border-left: 4px solid var(--accent-color); border-radius: 8px;">
+                        <p style="margin: 0; font-size: 0.95rem; color: var(--text-primary); line-height: 1.7;">
+                            <strong style="color: var(--accent-color);">📚 Course Flexibility:</strong> The resources listed are carefully curated recommendations. However, you're welcome to use any other courses or learning materials that cover the same topics. <strong>The goal is to ensure you understand the core concepts</strong> - the specific course you choose is less important than mastering the fundamentals. <em>Note: Content may be updated periodically with new learning resources.</em>
+                        </p>
+                    </div>
 
                     <!-- Beginner Content -->
                     <div id="beginner-content" class="tab-content active">
-                        <div class="level-card">
-                            <!-- Introduction to Data Analysis -->
-                            <div class="topic-section">
-                                <div class="topic-title">Introduction to Data Analysis</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=yZvFH7B6gKI" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">What is Data Analysis?</div>
-                                            <div class="resource-meta">Alex The Analyst • 20 min</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=1UXHsCT18wE" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Analyst Roadmap 2024</div>
-                                            <div class="resource-meta">Alex The Analyst • 15 min</div>
-                                        </div>
-                                    </a>
+                        <div class="topics-grid">
+                            <!-- Card 1: Introduction to Data Analysis -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon blue">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Introduction to Data Analysis</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Understand the fundamentals of data analysis and the analyst role
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 2-3 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=yZvFH7B6gKI" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">What is Data Analysis?</div>
+                                                <div class="resource-meta">Alex The Analyst • 20 min</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=1UXHsCT18wE" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Data Analyst Roadmap 2024</div>
+                                                <div class="resource-meta">Alex The Analyst • 15 min</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Excel for Data Analysis -->
-                            <div class="topic-section">
-                                <div class="topic-title">Excel for Data Analysis</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=GPVsHOlRBBI" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Excel Tutorial for Beginners</div>
-                                            <div class="resource-meta">freeCodeCamp • 3 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=Vl0H-qTclOg" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Excel for Data Analysis</div>
-                                            <div class="resource-meta">Alex The Analyst • 2 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 2: Excel for Data Analysis -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon green">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                                            <path d="M8 15.5l2-3 2 3 3-4.5 1 1.5"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Excel for Data Analysis</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Master Excel for data manipulation, analysis, and visualization
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 3-4 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=GPVsHOlRBBI" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Excel Tutorial for Beginners</div>
+                                                <div class="resource-meta">freeCodeCamp • 3 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=Vl0H-qTclOg" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Excel for Data Analysis</div>
+                                                <div class="resource-meta">Alex The Analyst • 2 hours</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- SQL Fundamentals -->
-                            <div class="topic-section">
-                                <div class="topic-title">SQL Fundamentals</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">SQL Tutorial - Full Course</div>
-                                            <div class="resource-meta">freeCodeCamp • 4 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=7S_tz1z_5bA" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">MySQL Tutorial for Beginners</div>
-                                            <div class="resource-meta">Programming with Mosh • 3 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 3: SQL Fundamentals -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon purple">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm6 14c0 .55-2.69 2-6 2s-6-1.45-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V17zm0-4.55c-1.3.95-3.58 1.55-6 1.55s-4.7-.6-6-1.55V9.64c1.47.83 3.61 1.36 6 1.36s4.53-.53 6-1.36v2.81zM12 9C8.69 9 6 7.55 6 7s2.69-2 6-2 6 1.45 6 2-2.69 2-6 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">SQL Fundamentals</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Learn SQL for querying and managing databases effectively
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 4-6 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">SQL Tutorial - Full Course</div>
+                                                <div class="resource-meta">freeCodeCamp • 4 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=7S_tz1z_5bA" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">MySQL Tutorial for Beginners</div>
+                                                <div class="resource-meta">Programming with Mosh • 3 hours</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Statistics Basics -->
-                            <div class="topic-section">
-                                <div class="topic-title">Statistics Basics</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=xxpc-HPKN28" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Statistics - A Full University Course</div>
-                                            <div class="resource-meta">freeCodeCamp • 8 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=qBigTkBLU6g" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Statistics Fundamentals</div>
-                                            <div class="resource-meta">StatQuest • Playlist</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 4: Statistics Basics -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon orange">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Statistics Basics</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Understand statistical concepts essential for data analysis
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 4-6 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=xxpc-HPKN28" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Statistics - A Full University Course</div>
+                                                <div class="resource-meta">freeCodeCamp • 8 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=qBigTkBLU6g" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Statistics Fundamentals</div>
+                                                <div class="resource-meta">StatQuest • Playlist</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Data Visualization Fundamentals -->
-                            <div class="topic-section">
-                                <div class="topic-title">Data Visualization Fundamentals</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=qBdTRdGoA2M" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Visualization Best Practices</div>
-                                            <div class="resource-meta">Storytelling with Data • 1 hour</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=0zZfU7hJwuY" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Introduction to Data Visualization</div>
-                                            <div class="resource-meta">Simplilearn • 45 min</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 5: Data Visualization Fundamentals -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon cyan">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                                            <circle cx="17" cy="12" r="2"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Data Visualization Fundamentals</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Learn principles of effective data visualization and storytelling
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">⭐ Beginner</span>
+                                    <span class="topic-duration">⏱️ 3-4 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=qBdTRdGoA2M" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Data Visualization Best Practices</div>
+                                                <div class="resource-meta">Storytelling with Data • 1 hour</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=0zZfU7hJwuY" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Introduction to Data Visualization</div>
+                                                <div class="resource-meta">Simplilearn • 45 min</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Intermediate Content -->
+                                        <!-- Intermediate Content -->
                     <div id="intermediate-content" class="tab-content">
-                        <div class="level-card">
-                            <!-- Power BI / Tableau -->
-                            <div class="topic-section">
-                                <div class="topic-title">Power BI / Tableau</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=c3OWSMRGBFE" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Power BI Full Course</div>
-                                            <div class="resource-meta">Pragmatic Works • 4 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=6xv1KvCMF1Q" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Tableau Tutorial for Beginners</div>
-                                            <div class="resource-meta">Edureka • 3 hours</div>
-                                        </div>
-                                    </a>
+                        <div class="topics-grid">
+                            <!-- Card 1: Power BI / Tableau -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon blue">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Power BI / Tableau</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Master business intelligence tools for interactive dashboards and reports
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐ Intermediate</span>
+                                    <span class="topic-duration">⏱️ 4-6 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=c3OWSMRGBFE" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Power BI Full Course</div>
+                                                <div class="resource-meta">Pragmatic Works • 4 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=6xv1KvCMF1Q" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Tableau Tutorial for Beginners</div>
+                                                <div class="resource-meta">Edureka • 3 hours</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Python for Data Analysis -->
-                            <div class="topic-section">
-                                <div class="topic-title">Python for Data Analysis (Pandas, NumPy)</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=TPMlZxRRaBQ" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Python Pandas Tutorial</div>
-                                            <div class="resource-meta">Keith Galli • 6 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=vmEHCJofslg" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">NumPy Tutorial for Beginners</div>
-                                            <div class="resource-meta">freeCodeCamp • 1 hour</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 2: Python for Data Analysis -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon green">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Python for Data Analysis</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Use Python libraries like Pandas and NumPy for advanced data manipulation
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐ Intermediate</span>
+                                    <span class="topic-duration">⏱️ 5-7 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=TPMlZxRRaBQ" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Python Pandas Tutorial</div>
+                                                <div class="resource-meta">Keith Galli • 6 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=vmEHCJofslg" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">NumPy Tutorial for Beginners</div>
+                                                <div class="resource-meta">freeCodeCamp • 1 hour</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Advanced SQL -->
-                            <div class="topic-section">
-                                <div class="topic-title">Advanced SQL</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=Nt6JJR7Kjew" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Advanced SQL Tutorial</div>
-                                            <div class="resource-meta">Alex The Analyst • 2 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=2Fn0WAyZV0E" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">SQL Window Functions</div>
-                                            <div class="resource-meta">Alex The Analyst • 30 min</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 3: Advanced SQL -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon purple">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm6 14c0 .55-2.69 2-6 2s-6-1.45-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V17zm0-4.55c-1.3.95-3.58 1.55-6 1.55s-4.7-.6-6-1.55V9.64c1.47.83 3.61 1.36 6 1.36s4.53-.53 6-1.36v2.81zM12 9C8.69 9 6 7.55 6 7s2.69-2 6-2 6 1.45 6 2-2.69 2-6 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Advanced SQL</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Learn complex queries, window functions, and optimization techniques
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐ Intermediate</span>
+                                    <span class="topic-duration">⏱️ 4-5 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=Nt6JJR7Kjew" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Advanced SQL Tutorial</div>
+                                                <div class="resource-meta">Alex The Analyst • 2 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=2Fn0WAyZV0E" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">SQL Window Functions</div>
+                                                <div class="resource-meta">Alex The Analyst • 30 min</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Statistical Analysis -->
-                            <div class="topic-section">
-                                <div class="topic-title">Statistical Analysis</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=zRUliXuwJCQ" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Hypothesis Testing</div>
-                                            <div class="resource-meta">StatQuest • 45 min</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=0Vj2V2qRU10" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Regression Analysis</div>
-                                            <div class="resource-meta">StatQuest • 1 hour</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 4: Statistical Analysis -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon orange">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Statistical Analysis</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Apply hypothesis testing, regression, and statistical modeling
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐ Intermediate</span>
+                                    <span class="topic-duration">⏱️ 5-6 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=zRUliXuwJCQ" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Hypothesis Testing</div>
+                                                <div class="resource-meta">StatQuest • 45 min</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=0Vj2V2qRU10" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Regression Analysis</div>
+                                                <div class="resource-meta">StatQuest • 1 hour</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Business Intelligence Concepts -->
-                            <div class="topic-section">
-                                <div class="topic-title">Business Intelligence Concepts</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=yz13o_89K0Y" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Business Intelligence Tutorial</div>
-                                            <div class="resource-meta">Simplilearn • 1.5 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Warehousing for BI</div>
-                                            <div class="resource-meta">Simplilearn • 45 min</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 5: Business Intelligence Concepts -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon cyan">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Business Intelligence Concepts</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Understand BI frameworks, data warehousing, and reporting strategies
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">⭐ Intermediate</span>
+                                    <span class="topic-duration">⏱️ 3-4 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=yz13o_89K0Y" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Business Intelligence Tutorial</div>
+                                                <div class="resource-meta">Simplilearn • 1.5 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=M4Md2UvMYRo" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Data Warehousing for BI</div>
+                                                <div class="resource-meta">Simplilearn • 45 min</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Advanced Content -->
+                                        <!-- Advanced Content -->
                     <div id="advanced-content" class="tab-content">
-                        <div class="level-card">
-                            <!-- Predictive Analytics -->
-                            <div class="topic-section">
-                                <div class="topic-title">Predictive Analytics</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=7eh4d6sabA0" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Predictive Analytics Tutorial</div>
-                                            <div class="resource-meta">Simplilearn • 1.5 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Introduction to Predictive Modeling</div>
-                                            <div class="resource-meta">3Blue1Brown • 20 min</div>
-                                        </div>
-                                    </a>
+                        <div class="topics-grid">
+                            <!-- Card 1: Predictive Analytics -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon blue">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                            <path d="M12 6v6l4 2"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Predictive Analytics</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Build predictive models and forecasting systems for data-driven decisions
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">⭐ Advanced</span>
+                                    <span class="topic-duration">⏱️ 6-8 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=7eh4d6sabA0" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Predictive Analytics Tutorial</div>
+                                                <div class="resource-meta">Simplilearn • 1.5 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Introduction to Predictive Modeling</div>
+                                                <div class="resource-meta">3Blue1Brown • 20 min</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- A/B Testing & Experimentation -->
-                            <div class="topic-section">
-                                <div class="topic-title">A/B Testing & Experimentation</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=1m2lZRn3igI" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">A/B Testing Explained</div>
-                                            <div class="resource-meta">Data Science Dojo • 45 min</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=VQlVrxjEzVk" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Experimental Design</div>
-                                            <div class="resource-meta">StatQuest • 30 min</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 2: A/B Testing & Experimentation -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon orange">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">A/B Testing & Experimentation</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Design and analyze experiments to optimize products and features
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">⭐ Advanced</span>
+                                    <span class="topic-duration">⏱️ 4-6 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=1m2lZRn3igI" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">A/B Testing Explained</div>
+                                                <div class="resource-meta">Data Science Dojo • 45 min</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=VQlVrxjEzVk" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Experimental Design</div>
+                                                <div class="resource-meta">StatQuest • 30 min</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Advanced Data Visualization -->
-                            <div class="topic-section">
-                                <div class="topic-title">Advanced Data Visualization</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=_ZEWDGpM-vM" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Visualization with Python</div>
-                                            <div class="resource-meta">freeCodeCamp • 2 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=qBdTRdGoA2M" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Advanced Dashboard Design</div>
-                                            <div class="resource-meta">Storytelling with Data • 1 hour</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 3: Advanced Data Visualization -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon cyan">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Advanced Data Visualization</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Create sophisticated visualizations with Python and advanced dashboard design
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">⭐ Advanced</span>
+                                    <span class="topic-duration">⏱️ 4-5 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=_ZEWDGpM-vM" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Data Visualization with Python</div>
+                                                <div class="resource-meta">freeCodeCamp • 2 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=qBdTRdGoA2M" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Advanced Dashboard Design</div>
+                                                <div class="resource-meta">Storytelling with Data • 1 hour</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Machine Learning Basics -->
-                            <div class="topic-section">
-                                <div class="topic-title">Machine Learning Basics</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=ukzFI9rgwfU" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Machine Learning for Beginners</div>
-                                            <div class="resource-meta">freeCodeCamp • 3 hours</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=i_LwzRVP7bg" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Scikit-Learn Tutorial</div>
-                                            <div class="resource-meta">Keith Galli • 2 hours</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 4: Machine Learning Basics -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon purple">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Machine Learning Basics</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Apply machine learning algorithms for classification and prediction tasks
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">⭐ Advanced</span>
+                                    <span class="topic-duration">⏱️ 6-8 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=ukzFI9rgwfU" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Machine Learning for Beginners</div>
+                                                <div class="resource-meta">freeCodeCamp • 3 hours</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=i_LwzRVP7bg" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Scikit-Learn Tutorial</div>
+                                                <div class="resource-meta">Keith Galli • 2 hours</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Data Storytelling & Communication -->
-                            <div class="topic-section">
-                                <div class="topic-title">Data Storytelling & Communication</div>
-                                <div class="resources-list">
-                                    <a href="https://www.youtube.com/watch?v=8EMW7io4rSI" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Data Storytelling Fundamentals</div>
-                                            <div class="resource-meta">Storytelling with Data • 45 min</div>
-                                        </div>
-                                    </a>
-                                    <a href="https://www.youtube.com/watch?v=vTingdk_pVM" target="_blank"
-                                        class="resource-item">
-                                        <span class="resource-icon">📺</span>
-                                        <div class="resource-content">
-                                            <div class="resource-title">Presenting Data Insights</div>
-                                            <div class="resource-meta">Alex The Analyst • 30 min</div>
-                                        </div>
-                                    </a>
+                            <!-- Card 5: Data Storytelling & Communication -->
+                            <div class="topic-card" onclick="toggleCard(this)">
+                                <div class="topic-card-header">
+                                    <div class="topic-icon green">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="topic-card-title">Data Storytelling & Communication</div>
+                                    </div>
+                                    <span class="expand-arrow">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="topic-card-description">
+                                    Master the art of presenting insights and influencing stakeholders with data
+                                </div>
+                                <div class="topic-card-meta">
+                                    <span class="topic-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">⭐ Advanced</span>
+                                    <span class="topic-duration">⏱️ 3-4 weeks</span>
+                                </div>
+                                <div class="expandable-content">
+                                    <div class="resources-list">
+                                        <a href="https://www.youtube.com/watch?v=8EMW7io4rSI" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Data Storytelling Fundamentals</div>
+                                                <div class="resource-meta">Storytelling with Data • 45 min</div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.youtube.com/watch?v=vTingdk_pVM" target="_blank" class="resource-item" onclick="event.stopPropagation()">
+                                            <span class="resource-icon">📺</span>
+                                            <div class="resource-content">
+                                                <div class="resource-title">Presenting Data Insights</div>
+                                                <div class="resource-meta">Alex The Analyst • 30 min</div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -646,6 +1081,10 @@
 
             // Add active class to clicked button
             event.target.closest('.tab-button').classList.add('active');
+        }
+
+        function toggleCard(card) {
+            card.classList.toggle('expanded');
         }
     </script>
 </body>
